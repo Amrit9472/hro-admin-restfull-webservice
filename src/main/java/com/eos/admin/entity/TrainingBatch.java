@@ -40,5 +40,7 @@ public class TrainingBatch {
     @Column(name = "employee_id")
     private List<Long> candidateIds;
     
+    
+    
     private int trainingDays;
 }

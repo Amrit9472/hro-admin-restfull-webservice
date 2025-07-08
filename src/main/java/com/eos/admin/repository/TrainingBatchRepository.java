@@ -4,6 +4,7 @@ import com.eos.admin.dto.TrainingBatchDTO;
 import com.eos.admin.entity.TrainingBatch;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,5 +22,7 @@ public interface TrainingBatchRepository extends JpaRepository<TrainingBatch, Lo
     @Query("SELECT DISTINCT new com.eos.admin.dto.TrainingBatchDTO(tb.id, tb.batchCode, tb.trainingStartDate, tb.process, li.trainingDays) " +
     	       "FROM TrainingBatch tb JOIN LoiInformationTableEntity li ON tb.process = li.process")
     	List<TrainingBatchDTO> findAllWithTrainingDays();
+
+    Optional<TrainingBatch> findByBatchCode(String batchCode);
 
 }

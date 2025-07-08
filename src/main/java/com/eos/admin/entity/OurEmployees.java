@@ -30,6 +30,7 @@ public class OurEmployees {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "our_employee_id")
 	private Long OurEmployeeId;
 
 	@OneToOne
@@ -81,6 +82,10 @@ public class OurEmployees {
 
 	@Column(name = "pli")
 	private Double pli;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employeeTraining")
+	private EmployeeTraining employeeTraining;
 
 	@Version
 	@Column(name = "version")

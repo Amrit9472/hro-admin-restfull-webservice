@@ -2,6 +2,7 @@ package com.eos.admin.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -130,5 +131,19 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	@Query(value = "SELECT * FROM employees WHERE id IN (SELECT employee_id FROM training_batch_candidates WHERE training_batch_id = :batchId)", nativeQuery = true)
 	List<Employee> findAllByBatchId(@Param("batchId") Long batchId);
+
+	@Query(value = "SELECT CASE " +
+            "WHEN es.profile_screen_remarks IS NOT NULL AND es.profile_screen_remarks <> '' " +
+            "THEN true ELSE false END AS has_screening_remarks " +
+            "FROM employees e " +
+            "JOIN employee_status_details es ON e.id = es.employee_id " +
+            "WHERE e.email = :email", nativeQuery = true)
+	Long existsScreeningRemarksByEmail(@Param("email") String email);
+
+	@Query("SELECT e FROM Employee e WHERE e.email IN ?1")
+	List<Employee> findByEmailIn(Set<String> candidateEmails);
+//	@Query("SELECT e FROM Employee e WHERE e.email IN :emails")
+//	List<Employee> findByEmailIn(@Param("emails") Set<String> emails);
+
 
 }

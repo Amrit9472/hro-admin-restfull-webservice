@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import com.eos.admin.entity.OurUsers;
 import com.eos.admin.jwt.JWTUtilsImpl;
 import com.eos.admin.repository.UsersRepository;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class UserManagementService {
 
@@ -85,6 +88,7 @@ public class UserManagementService {
 		return resp;
 	}
 
+	{/**
 	public ReqRes login(ReqRes loginRequest) {
 		ReqRes response = new ReqRes();
 		try {
@@ -113,45 +117,43 @@ public class UserManagementService {
 		}
 		return response;
 	}
-//	
-//	public ReqRes login(ReqRes loginRequest) {
-//	    ReqRes response = new ReqRes();
-//
-//	    try {
-//	        // 1. Authenticate and get full user details including authorities
-//	        Authentication authentication = authenticationManager.authenticate(
-//	            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-//	        );
-//
-//	        // 2. Get Spring Security's UserDetails
-//	        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//
-//	        // 3. Now use UserDetails to generate the token with roles
-//	        String jwt = jwtUtilsImpl.generateToken(userDetails);
-//	        String refreshToken = jwtUtilsImpl.generateRefreshToken(new HashMap<>(), userDetails);
-//
-//	        // Optional: Get your custom user for extra info like name, city, etc.
-//	        var user = usersRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
-//
-//	        // 4. Build response
-//	        response.setStatusCode(200);
-//	        response.setToken(jwt);
-//	        response.setRefreshToken(refreshToken);
-//	        response.setRole(userDetails.getAuthorities().toString()); // or user.getRole() if preferred
-//	        response.setName(user.getName());
-//	        response.setEmail(user.getEmail());
-//	        response.setCity(user.getCity());
-//	        response.setExpirationTime("24Hrs");
-//	        response.setMessage("SuccessFull login");
-//	        response.setUniqueCode(user.getUniqueCode());
-//
-//	    } catch (Exception e) {
-//	        response.setStatusCode(500);
-//	        response.setMessage("Incorrect Email or Password");
-//	    }
-//
-//	    return response;
-//	}
+	*/}
+	
+	public ReqRes login(ReqRes loginRequest) {
+	    ReqRes response = new ReqRes();
+	    log.debug("Login attempt for email: {}", loginRequest.getEmail());
+	    try {
+	        authenticationManager.authenticate(
+	                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+	        log.debug("Authentication successful for email: {}", loginRequest.getEmail());
+	        var user = usersRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+	        var jwt = jwtUtilsImpl.generateToken(user);
+	        var refreshToken = jwtUtilsImpl.generateRefreshToken(user);
+
+	        response.setStatusCode(200);
+	        response.setToken(jwt);
+	        response.setRole(user.getRole());
+	        response.setName(user.getName());
+	        response.setEmail(user.getEmail());
+	        response.setRefreshToken(refreshToken);
+	        response.setCity(user.getCity());
+	        response.setBranch(user.getBranch());
+	        response.setExpirationTime("24Hrs");
+	        response.setMessage("Successful login");
+	        response.setUniqueCode(user.getUniqueCode());
+
+	    } catch (BadCredentialsException e) {
+	        log.warn("Failed login attempt for email: {}", loginRequest.getEmail());
+	        response.setStatusCode(401);
+	        response.setMessage("Incorrect email or password");
+	    } catch (Exception e) {
+	        log.error("Error during login: {}", e.getMessage(), e);
+	        response.setStatusCode(500);
+	        response.setMessage("An error occurred during login");
+	    }
+	    return response;
+	}
+
 
 	public ReqRes changePassword(ChangePasswordRequest changePasswordRequest) {
 		ReqRes resp = new ReqRes();

@@ -1,6 +1,7 @@
 package com.eos.admin.error;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class ErrorResponse {
     private String error;
     private LocalDateTime timestamp;
     private String path;
-    
+    private Map<String, String> fieldErrors;
     public ErrorResponse(String message, int status, String error, String path) {
         this.message = message;
         this.status = status;

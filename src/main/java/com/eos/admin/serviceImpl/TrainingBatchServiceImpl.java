@@ -1,6 +1,7 @@
 package com.eos.admin.serviceImpl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,7 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.eos.admin.dto.TrainingBatchDTO;
+import com.eos.admin.dto.TrainingCandidateDTO;
 import com.eos.admin.dto.TrainingCandidateListDTO;
+import com.eos.admin.entity.InductionAttendance;
 import com.eos.admin.entity.TrainingBatch;
 import com.eos.admin.enums.AttendanceType;
 import com.eos.admin.repository.InductionAttendanceRepository;
@@ -78,7 +81,7 @@ public class TrainingBatchServiceImpl implements TrainingBatchService {
                     .passingMarks(dto.getPassingMarks())
                     .certificateRequired(dto.isCertificateRequired())
                     .batchCode(batchCode)
-                    .candidateIds(dto.getCandidateIds())
+//                    .candidateIds(dto.getCandidateIds())
                     .build();
 
             TrainingBatch saved = trainingBatchRepository.save(entity);
@@ -106,6 +109,26 @@ public class TrainingBatchServiceImpl implements TrainingBatchService {
 
             return new TrainingCandidateListDTO(employeeId, proc, fullName, inductionDate, type);
         }).toList();
+    }
+
+    @Override
+    public List<TrainingCandidateDTO> getCandidatesByProcess(String process) {
+        List<InductionAttendance> records = inductionAttendanceRepository.findByOurEmployee_ProcessAndType(process, AttendanceType.INDUCTION);
+
+        List<TrainingCandidateDTO> dtoList = new ArrayList();
+
+        for (InductionAttendance record : records) {
+            TrainingCandidateDTO dto = new TrainingCandidateDTO();
+            dto.setOurEmployeeId(record.getOurEmployee().getOurEmployeeId());
+            dto.setName(record.getOurEmployee().getEmployee().getFullName());
+            dto.setProcess(record.getOurEmployee().getProcess());
+            dto.setSubmissionDate(record.getSubmissionDate());
+            dto.setType(record.getType().name()); // or .toString()
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
     @Override

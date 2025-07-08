@@ -62,14 +62,25 @@ public class TrainingScoreController {
         }
     }
 
-    @GetMapping("/score-meta")
-    public ResponseEntity<?> getScoreMeta(@RequestParam("batchId") Long batchId) {
-        try {
-            log.info("Fetching score meta for batchId={}", batchId);
-            return ResponseEntity.ok(trainingScoreService.getScoreMeta(batchId));
-        } catch (Exception e) {
-            log.error("Error fetching score meta for batchId={}", batchId, e);
-            return ResponseEntity.internalServerError().body("Error fetching score meta");
-        }
-    }
+//    @GetMapping("/score-meta")
+//    public ResponseEntity<?> getScoreMeta(@RequestParam("batchId") Long batchId) {
+//        try {
+//            log.info("Fetching score meta for batchId={}", batchId);
+//            return ResponseEntity.ok(trainingScoreService.getScoreMeta(batchId));
+//        } catch (Exception e) {
+//            log.error("Error fetching score meta for batchId={}", batchId, e);
+//            return ResponseEntity.internalServerError().body("Error fetching score meta");
+//        }
+//    }
+    
+  @GetMapping("/score-meta")
+  public ResponseEntity<?> getScoreMeta(@RequestParam("batchId") String batchId) {
+      try {
+          log.info("Fetching score meta for batchId={}", batchId);
+          return ResponseEntity.ok(trainingScoreService.getScoreMeta(batchId));
+      } catch (Exception e) {
+          log.error("Error fetching score meta for batchId={}", batchId, e);
+          return ResponseEntity.internalServerError().body("Error fetching score meta");
+      }
+  }
 }

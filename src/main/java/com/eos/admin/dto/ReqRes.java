@@ -6,13 +6,17 @@ import com.eos.admin.entity.OurUsers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReqRes {
-
+    
+	private Integer id;
 	private int statusCode;
 	private String error;
 	private String message;
@@ -33,4 +37,8 @@ public class ReqRes {
 	private String address;
 	private String officeEmail;
 	private String branch;
+	
+	public ReqRes(String message) {
+	    this.message = message;
+	}
 }

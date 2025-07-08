@@ -1,5 +1,6 @@
 package com.eos.admin.repository;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -30,5 +31,12 @@ public interface OurEmployeeRepository extends JpaRepository<OurEmployees, Long>
 	
 	@Query(value = "SELECT * FROM our_employee WHERE process = :process AND joining_date = :joiningDate", nativeQuery = true)
 	List<OurEmployees> findByDateAndProcess(@Param("process") String process, @Param("joiningDate") Date joiningDate);
+
+//	List<OurEmployees> findByEmployee_IdIn(Collection<Long> employeeIds);
+	
+//	@Query("SELECT oe FROM OurEmployees oe WHERE oe.employee.id IN :employeeIds")
+//	List<OurEmployees> findByEmployeeIds(@Param("employeeIds") Collection<Long> employeeIds);
+	@Query(value = "SELECT * FROM our_employee WHERE employee_id IN (:employeeIds)", nativeQuery = true)
+	List<OurEmployees> findByEmployeeIds(@Param("employeeIds") Collection<Long> employeeIds);
 
 }

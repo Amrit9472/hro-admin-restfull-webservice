@@ -65,4 +65,6 @@ public interface EmployeeService {
 	EmployeeDto submitResponseForReScreeningProfile(Long employeeId, StatusRequestDTO statusRequestDTO);
 	
 	String getVendorNameByEmployeeEmail(String empEmail);
+	
+	Long hasScreeningRemarks(String email);
 }

@@ -1,6 +1,7 @@
 package com.eos.admin.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,9 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,14 +20,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-//@Table(
-//    uniqueConstraints = @UniqueConstraint(columnNames = {"candiEmail", "scheme"})
-//)
+@Data
 public class CandidatesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     
     private String candiName;
     private String candiMobile;
@@ -36,6 +34,9 @@ public class CandidatesEntity {
     private String candiEmail;
     
     private LocalDateTime submittedDate;
+    
+    @Column(name = "interviewAttendingDate")
+    private Date interviewAttendingDate;
     
     @PrePersist
     protected void onCreate() {
@@ -47,4 +48,11 @@ public class CandidatesEntity {
     
     @Column(name = "scheme")
     private String scheme;
+    
+    @Column(name = "venId")
+    private String venId;
+    
+//    @Column(name = "vendorId")
+//    private String vendorId;
+    
 }

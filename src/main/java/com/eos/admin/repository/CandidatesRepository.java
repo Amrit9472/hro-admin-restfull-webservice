@@ -25,4 +25,18 @@ public interface CandidatesRepository extends JpaRepository<CandidatesEntity, Lo
             "JOIN employee_status_details esd ON e.id = esd.employee_id " +
             "WHERE e.email = :email", nativeQuery = true)
     Optional<String> findManagerStatusByEmail(@Param("email") String email);
+    
+    List<CandidatesEntity> findByVenIdAndVendorEmailOrderBySubmittedDateDesc(String venId, String vendorEmail);
+
+	List<CandidatesEntity> findAllByVendorEmailOrderBySubmittedDateDesc(String vendorEmail);
+	
+	@Query(value = "SELECT CASE " +
+            "WHEN es.profile_screen_remarks IS NOT NULL AND es.profile_screen_remarks <> '' " +
+            "THEN true ELSE false END AS has_screening_remarks " +
+            "FROM employees e " +
+            "JOIN employee_status_details es ON e.id = es.employee_id " +
+            "WHERE e.email = :email", nativeQuery = true)
+	Long existsScreeningRemarksByEmail(@Param("email") String email);
+
+
 }

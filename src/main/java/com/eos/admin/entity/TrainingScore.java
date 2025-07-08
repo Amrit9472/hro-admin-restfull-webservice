@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
+
 @Table(name = "training_score")
 @Getter
 @Setter
@@ -23,7 +24,11 @@ public class TrainingScore {
 
     @Column(name = "training_batch_id", nullable = false)
     private Long trainingBatchId;
+    
+//    @Column(name = "training_batch_id", nullable = false)
+//    private Long trainingBatchId;
 
+    
     @ElementCollection
     @CollectionTable(name = "training_score_attempts", joinColumns = @JoinColumn(name = "training_score_id"))
     @Column(name = "score")

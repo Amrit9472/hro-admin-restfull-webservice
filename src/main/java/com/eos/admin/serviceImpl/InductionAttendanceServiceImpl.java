@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 
 import com.eos.admin.dto.InductionAttendanceDTO;
 import com.eos.admin.entity.Employee;
+import com.eos.admin.entity.EmployeeTraining;
 import com.eos.admin.entity.InductionAttendance;
 import com.eos.admin.entity.OurEmployees;
 import com.eos.admin.entity.TrainingBatch;
 import com.eos.admin.enums.AttendanceType;
 import com.eos.admin.repository.EmployeeRepository;
+import com.eos.admin.repository.EmployeeTrainingRepository;
 import com.eos.admin.repository.InductionAttendanceRepository;
 import com.eos.admin.repository.OurEmployeeRepository;
 import com.eos.admin.repository.TrainingBatchRepository;
@@ -35,15 +37,14 @@ public class InductionAttendanceServiceImpl implements InductionAttendanceServic
 
     private OurEmployeeRepository ourEmployeeRepository;
 
-    private EmployeeRepository employeeRepository;
-    
-
     private TrainingBatchRepository trainingBatchRepository;
 
 
     private InductionAttendanceRepository attendanceRepository;
     private final ModelMapper modelMapper;
     
+    @Autowired
+    private EmployeeTrainingRepository employeeTrainingRepository;
     
 
     public InductionAttendanceServiceImpl(OurEmployeeRepository ourEmployeeRepository,
@@ -51,7 +52,6 @@ public class InductionAttendanceServiceImpl implements InductionAttendanceServic
 			InductionAttendanceRepository attendanceRepository, ModelMapper modelMapper) {
 		super();
 		this.ourEmployeeRepository = ourEmployeeRepository;
-		this.employeeRepository = employeeRepository;
 		this.trainingBatchRepository = trainingBatchRepository;
 		this.attendanceRepository = attendanceRepository;
 		this.modelMapper = modelMapper;
@@ -96,25 +96,56 @@ public class InductionAttendanceServiceImpl implements InductionAttendanceServic
 
     
     
+//    @Override
+//    public List<InductionAttendanceDTO> getEmployeesByBatch(Long batchId) {
+//        List<InductionAttendanceDTO> response = new ArrayList<>();
+//
+//        try {
+//            Optional<TrainingBatch> optionalBatch = trainingBatchRepository.findById(batchId);
+//            if (optionalBatch.isPresent()) {
+//                TrainingBatch batch = optionalBatch.get();
+//                List<Long> candidateIds = batch.getCandidateIds();
+//
+//                for (Long empId : candidateIds) {
+//                    Employee emp = employeeRepository.findById(empId).orElse(null);
+//                    if (emp != null) {
+//                        InductionAttendanceDTO dto = new InductionAttendanceDTO();
+//                        dto.setEmployeeId(emp.getId());
+//                        dto.setName(emp.getFullName());
+////                        dto.setDate(batch.getTrainingStartDate());
+//                        dto.setProcess(batch.getProcess());
+//                        dto.setType(AttendanceType.TRAINING);
+//                        response.add(dto);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            log.error("Failed to fetch training batch employees for batchId={}", batchId, e);
+//        }
+//
+//        return response;
+//    }
+    
+
     @Override
-    public List<InductionAttendanceDTO> getEmployeesByBatch(Long batchId) {
+    public List<InductionAttendanceDTO> getEmployeesByBatch(String batchId) {
         List<InductionAttendanceDTO> response = new ArrayList<>();
 
         try {
-            Optional<TrainingBatch> optionalBatch = trainingBatchRepository.findById(batchId);
+            Optional<EmployeeTraining> optionalBatch = employeeTrainingRepository.findByBatchCode(batchId);
             if (optionalBatch.isPresent()) {
-                TrainingBatch batch = optionalBatch.get();
-                List<Long> candidateIds = batch.getCandidateIds();
+                EmployeeTraining batch = optionalBatch.get();
 
-                for (Long empId : candidateIds) {
-                    Employee emp = employeeRepository.findById(empId).orElse(null);
-                    if (emp != null) {
+                List<OurEmployees> employees = batch.getEmployees();
+
+                for (OurEmployees emp : employees) {
+                    if (emp.getEmployee() != null) {
                         InductionAttendanceDTO dto = new InductionAttendanceDTO();
-                        dto.setEmployeeId(emp.getId());
-                        dto.setName(emp.getFullName());
-//                        dto.setDate(batch.getTrainingStartDate());
+                        dto.setEmployeeId(emp.getEmployee().getId());
+                        dto.setName(emp.getEmployee().getFullName());
                         dto.setProcess(batch.getProcess());
                         dto.setType(AttendanceType.TRAINING);
+                        dto.setOurEmployeeId(emp.getOurEmployeeId());
                         response.add(dto);
                     }
                 }
@@ -125,6 +156,8 @@ public class InductionAttendanceServiceImpl implements InductionAttendanceServic
 
         return response;
     }
+
+    
     @Override
     public List<Map<String, Object>> getAllTrainingBatches() {
         List<Map<String, Object>> batches = new ArrayList<>();
@@ -161,6 +194,12 @@ public class InductionAttendanceServiceImpl implements InductionAttendanceServic
     	    attendanceRepository.saveAll(entities);
     	
     }
+
+	@Override
+	public List<InductionAttendanceDTO> getEmployeesByBatch(Long batchId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 //        try {
 //            List<InductionAttendance> entities = attendanceList.stream().map(dto -> {

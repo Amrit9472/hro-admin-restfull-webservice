@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.eos.admin.enums.VendorDetailsVerification;
 
+import jakarta.persistence.Column;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,9 +17,6 @@ public class VendorInfoDTO {
 
     private Long id;
     private String companyName;
-    private String address;
-    private String city;
-    private String pinCode;
     private String telephone;
     private String mobile;
     private String email;
@@ -28,9 +27,14 @@ public class VendorInfoDTO {
     private String serviceType;
     private String serviceTypeOther;
     private boolean declaration;
+	private Boolean panUpload;
+	private Boolean gstUpload;
+	private Boolean msmeUpload;
+	private Boolean checkUpload;
     private String verificationRemark;
     private VendorDetailsVerification vendorDetailsVerification;
     private List<DirectorDTO> directors;
     private BankDetailsDTO bankDetails;
+    private List<AddressDTO> address;
    
 }

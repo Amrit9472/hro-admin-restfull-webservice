@@ -14,4 +14,8 @@ public interface CandidatesService {
 	public List<CandidatesDTO> findBySubmittedDateBetweenAndVendorEmail(LocalDateTime start, LocalDateTime end, String vendorEmail);
 	
 	public String getManagerStatusByEmail(String email);
+
+	List<CandidatesDTO> getCandidatesByVendor(String venId, String vendorEmail);
+
+	List<CandidatesDTO> findAllByVendorEmailLifo(String vendorEmail);
 }

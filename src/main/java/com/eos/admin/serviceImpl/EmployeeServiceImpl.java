@@ -272,7 +272,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				 List<String> emailList = ourUserDetailsServiceImpl.findEmailByProceeName(statusRequestDTO.getProcessName());
 				 log.info("Email list to send interview schedule: {}", emailList);
                
-				 emailService.sendScheduleInterviewEmailToManager(emailList , employeeStatusDetails, statusRequestDTO);
+//				 emailService.sendScheduleInterviewEmailToManager(emailList , employeeStatusDetails, statusRequestDTO);
 				}
 				
 				employeeStatusDetails.setLastInterviewAssign(statusRequestDTO.getProcessName());
@@ -1120,5 +1120,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		log.info("Vendor name found: {} for employee email: {}", vendorName, empEmail);
 		return vendorName;
+	}
+
+	@Override
+	public Long hasScreeningRemarks(String email) {
+		// TODO Auto-generated method stub
+		   Long result = employeeRepository.existsScreeningRemarksByEmail(email);
+	        return result;
 	}
 }

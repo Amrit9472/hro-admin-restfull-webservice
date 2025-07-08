@@ -11,5 +11,6 @@ public interface TrainingScoreService {
     TrainingScore getScore(Long batchId, Long employeeId);
     TrainingScore saveScore(TrainingScoreDTO dto);
     List<TrainingScore> saveAllScores(List<TrainingScoreDTO> dtos);
-    ScoreMetaDTO getScoreMeta(Long batchId);
+//    ScoreMetaDTO getScoreMeta(Long batchId);
+    ScoreMetaDTO getScoreMeta(String batchId);
 }

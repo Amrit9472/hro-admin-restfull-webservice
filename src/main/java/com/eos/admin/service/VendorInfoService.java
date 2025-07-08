@@ -1,8 +1,12 @@
 package com.eos.admin.service;
 
 import com.eos.admin.dto.DetailedFormDTO;
+import com.eos.admin.dto.VendorCompanyNameDTO;
+import com.eos.admin.dto.VendorDashboardStatusDTO;
 import com.eos.admin.dto.VendorInfoDTO;
+import com.eos.admin.dto.VendorUploadStatusDTO;
 import com.eos.admin.dto.VendorVerificationDTO;
+import com.eos.admin.enums.FileType;
 import com.eos.admin.enums.VendorDetailsVerification;
 
 import java.io.IOException;
@@ -29,4 +33,17 @@ public interface VendorInfoService {
 	String verifyVendorDetails(Long id, VendorVerificationDTO vendorVerificationDTO);
 	
 	VendorDetailsVerification getVendorVerificationStatusByEmail(String email);
+    
+	/**Amrit*/
+	VendorInfoDTO createVendorInfo(DetailedFormDTO detailedFormDTO, List<MultipartFile> images);
+
+	/**Amrit*/
+	VendorDashboardStatusDTO getVendorDashboardStatus(String email);
+	/**Amrit*/
+	String handleFileUpload(MultipartFile file, FileType fileType, String fileNo);
+    /**Amrit*/
+	List<VendorCompanyNameDTO> getAllVendorCompanyNames();
+
+	/**Amrit*/
+	VendorUploadStatusDTO getUploadStatus(Long vendorId);
 }

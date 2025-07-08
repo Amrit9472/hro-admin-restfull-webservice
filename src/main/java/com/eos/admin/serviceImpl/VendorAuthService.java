@@ -11,7 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.eos.admin.dto.ChangePasswordRequest;
 import com.eos.admin.dto.ReqRes;
+import com.eos.admin.entity.OurUsers;
 import com.eos.admin.entity.Vendor;
 import com.eos.admin.jwt.JWTUtilsImpl;
 import com.eos.admin.repository.VendorRepository;
@@ -52,7 +54,7 @@ public class VendorAuthService {
         vendor.setRole("VENDOR");
 
         vendorRepository.save(vendor);
-        emailService.sendRegistrationEmail(vendor.getEmail(), request.getPassword());
+        emailService.sendRegistrationEmail(vendor.getEmail(), request.getPassword(), request.getName());
         resp.setStatusCode(200);
         resp.setMessage("Vendor registered.");
         return resp;
@@ -75,6 +77,7 @@ public class VendorAuthService {
             resp.setEmail(vendor.getEmail());
             resp.setName(vendor.getName());
             resp.setRole(vendor.getRole());
+            resp.setId(vendor.getId());
             resp.setStatusCode(200);
             resp.setMessage("Vendor login successful.");
         } catch (org.springframework.security.core.AuthenticationException ex) {
@@ -89,5 +92,54 @@ public class VendorAuthService {
 
         return resp;
     }
+
+    public ReqRes changePassword(ChangePasswordRequest changePasswordRequest) {
+		ReqRes resp = new ReqRes();
+		try {
+			String email = changePasswordRequest.getEmail();
+			String oldPassWord = changePasswordRequest.getOldPassword();
+			String newPassWord = changePasswordRequest.getNewPassword();
+			String confirmPassword = changePasswordRequest.getConfirmPassword();
+
+			if (email != null && !email.isEmpty() && oldPassWord != null && !oldPassWord.isEmpty()
+					&& newPassWord != null && !newPassWord.isEmpty() && confirmPassword != null
+					&& !confirmPassword.isEmpty()) {
+
+				if (!newPassWord.equals(confirmPassword)) { // Check if newPassword and confirmPassword match
+					resp.setStatusCode(400);
+					resp.setError("New password and confirm password do not match");
+					return resp;
+				}
+
+				Optional<Vendor> existingUser = vendorRepository.findByEmail(email);
+				if (existingUser.isPresent()) {
+					Vendor user = existingUser.get();
+					if (passwordEncoder.matches(oldPassWord, user.getPassword())) {
+						// Update the password
+						user.setPassword(passwordEncoder.encode(newPassWord));
+						vendorRepository.save(user);
+
+						resp.setMessage("Password changed successfully");
+						resp.setStatusCode(200);
+					} else {
+						resp.setStatusCode(400);
+						resp.setError("Old password is incorrect");
+					}
+				} else {
+					resp.setStatusCode(404);
+					resp.setError("User not Found");
+				}
+			} else {
+				resp.setStatusCode(400);
+				resp.setError("All fields are required");
+			}
+
+		} catch (Exception e) {
+			resp.setStatusCode(500);
+			resp.setError("An error occurred: " + e.getMessage());
+		}
+
+		return resp;
+	}
 
 }

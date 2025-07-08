@@ -46,16 +46,28 @@ public class InductionAttendanceController {
         }
     }
     
-    @GetMapping("/employees-by-batch")
-    public ResponseEntity<?> getEmployeesByBatchId(@RequestParam("batchId") Long batchId) {
-        try {
-            List<InductionAttendanceDTO> employees = attendanceService.getEmployeesByBatch(batchId);
-            return ResponseEntity.ok(employees);
-        } catch (Exception e) {
-            log.error("Error fetching employees for batchId {}: ", batchId, e);
-            return ResponseEntity.internalServerError().body("Failed to fetch employees by batch.");
-        }
-    }
+//    @GetMapping("/employees-by-batch")
+//    public ResponseEntity<?> getEmployeesByBatchId(@RequestParam("batchId") Long batchId) {
+//        try {
+//            List<InductionAttendanceDTO> employees = attendanceService.getEmployeesByBatch(batchId);
+//            return ResponseEntity.ok(employees);
+//        } catch (Exception e) {
+//            log.error("Error fetching employees for batchId {}: ", batchId, e);
+//            return ResponseEntity.internalServerError().body("Failed to fetch employees by batch.");
+//        }
+//    }
+	
+  @GetMapping("/employees-by-batch")
+  public ResponseEntity<?> getEmployeesByBatchId(@RequestParam("batchId") String batchId) {
+      try {
+          List<InductionAttendanceDTO> employees = attendanceService.getEmployeesByBatch(batchId);
+          return ResponseEntity.ok(employees);
+      } catch (Exception e) {
+          log.error("Error fetching employees for batchId {}: ", batchId, e);
+          return ResponseEntity.internalServerError().body("Failed to fetch employees by batch.");
+      }
+  }
+	
 
 
     @GetMapping("/employees")

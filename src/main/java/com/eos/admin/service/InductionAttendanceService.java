@@ -14,6 +14,7 @@ public interface InductionAttendanceService {
     void saveAttendance(List<InductionAttendanceDTO> attendanceList);
     List<InductionAttendanceDTO> getEmployeesByBatch(Long batchId);
     List<Map<String, Object>> getAllTrainingBatches();
+	List<InductionAttendanceDTO> getEmployeesByBatch(String batchId);
 
 
 }

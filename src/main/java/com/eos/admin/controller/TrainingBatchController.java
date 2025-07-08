@@ -1,6 +1,7 @@
 package com.eos.admin.controller;
 
 import com.eos.admin.dto.TrainingBatchDTO;
+import com.eos.admin.dto.TrainingCandidateDTO;
 import com.eos.admin.dto.TrainingCandidateListDTO;
 import com.eos.admin.service.TrainingBatchService;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,22 @@ public class TrainingBatchController {
         }
     }
 
+    
+    /**Amrit Raj singh*/
+    @GetMapping("/candidates2")
+    public ResponseEntity<List<TrainingCandidateDTO>> getTrainingCandidatesByProcess(
+            @RequestParam("process") String process) {
+        
+        List<TrainingCandidateDTO> candidates = trainingBatchService.getCandidatesByProcess(process);
+        
+        if (candidates.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+
+        return ResponseEntity.ok(candidates); // 200
+    }
+    
+    
     // Save training batch details from modal
     @PostMapping("/batch")
     public ResponseEntity<?> createTrainingBatch(@RequestBody TrainingBatchDTO dto) {
