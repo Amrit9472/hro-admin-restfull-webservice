@@ -1,19 +1,24 @@
 package com.eos.admin.serviceImpl;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.eos.admin.dto.TrainingBatchDTO;
 import com.eos.admin.dto.TrainingCandidateListDTO;
 import com.eos.admin.entity.TrainingBatch;
+import com.eos.admin.enums.AttendanceType;
+import com.eos.admin.repository.InductionAttendanceRepository;
 import com.eos.admin.repository.OurEmployeeRepository;
 import com.eos.admin.repository.TrainingBatchRepository;
 import com.eos.admin.repository.UsersRepository;
 import com.eos.admin.service.TrainingBatchService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,6 +28,7 @@ public class TrainingBatchServiceImpl implements TrainingBatchService {
     private final OurEmployeeRepository ourEmployeeRepository;
     private final TrainingBatchRepository trainingBatchRepository;
     private final UsersRepository usersRepository;
+    private final InductionAttendanceRepository inductionAttendanceRepository;
 
     @Override
     public List<String> getAllProcesses() {
@@ -33,16 +39,9 @@ public class TrainingBatchServiceImpl implements TrainingBatchService {
             throw new RuntimeException("Failed to fetch processes");
         }
     }
-
-    @Override
-    public List<TrainingBatchDTO> getCandidatesByProcess(String process) {
-        try {
-            // Placeholder for future implementation
-            return null;
-        } catch (Exception e) {
-            log.error("Error fetching candidates by process: {}", process, e);
-            throw new RuntimeException("Failed to fetch candidates");
-        }
+    
+    public List<TrainingBatchDTO> getAllBatchesWithTrainingDays() {
+        return trainingBatchRepository.findAllWithTrainingDays();
     }
 
     @Override
@@ -79,11 +78,12 @@ public class TrainingBatchServiceImpl implements TrainingBatchService {
                     .passingMarks(dto.getPassingMarks())
                     .certificateRequired(dto.isCertificateRequired())
                     .batchCode(batchCode)
+                    .candidateIds(dto.getCandidateIds())
                     .build();
 
             TrainingBatch saved = trainingBatchRepository.save(entity);
 
-            dto.setBatchid(saved.getId());
+            dto.setId(saved.getId());
             dto.setBatchCode(batchCode);
 
             return dto;
@@ -95,24 +95,17 @@ public class TrainingBatchServiceImpl implements TrainingBatchService {
 
     @Override
     public List<TrainingCandidateListDTO> getEmployeeDetailsByProcess(String process) {
-        try {
-            List<Object[]> rawData = ourEmployeeRepository.findEmployeeDetailsByProcess(process);
+        List<Object[]> results = ourEmployeeRepository.findEmployeeDetailsByProcess(process);
 
-            return rawData.stream()
-                .map(obj -> {
-                    String proc = (String) obj[0];
-                    String fullName = (String) obj[1];
+        return results.stream().map(row -> {
+            Long employeeId = ((Number) row[0]).longValue();
+            String proc = (String) row[1];
+            String fullName = (String) row[2];
+            LocalDate inductionDate = row[3] != null ? ((java.sql.Timestamp) row[3]).toLocalDateTime().toLocalDate() : null;
+            AttendanceType type = row[4] != null ? AttendanceType.valueOf(row[4].toString()) : null;
 
-                    java.sql.Date sqlDate = (java.sql.Date) obj[2];
-                    LocalDate submissionDate = (sqlDate != null) ? sqlDate.toLocalDate() : null;
-
-                    return new TrainingCandidateListDTO(proc, fullName, submissionDate);
-                })
-                .collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error fetching employee details for process: {}", process, e);
-            throw new RuntimeException("Failed to fetch employee details");
-        }
+            return new TrainingCandidateListDTO(employeeId, proc, fullName, inductionDate, type);
+        }).toList();
     }
 
     @Override

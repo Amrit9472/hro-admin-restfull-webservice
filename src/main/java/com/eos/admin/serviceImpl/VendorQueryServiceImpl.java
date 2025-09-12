@@ -31,11 +31,18 @@ public class VendorQueryServiceImpl implements QueryService {
 
 	@Override
 	public List<VendorQueryDTO> getQueriesByVendorEmail(String vendorEmail) {
-		List<VendorQuery> vendorQueries = vendorQueryRepository.findByVendorEmail(vendorEmail);
+	    List<VendorQuery> vendorQueries = vendorQueryRepository.findByVendorEmail(vendorEmail);
 
-		return vendorQueries.stream()
-				.map(query -> new VendorQueryDTO(query.getId(), query.getVendorEmail(), query.getQueryText()))
-				.collect(Collectors.toList());
+	    return vendorQueries.stream()
+	            .map(query -> new VendorQueryDTO(
+	                query.getId(),
+	                query.getVendorEmail(),
+	                query.getQueryText(),
+	                query.getVendorQueryStatus(),
+	                query.getInProgressRemark(),
+	                query.getClosedRemark()
+	            ))
+	            .collect(Collectors.toList());
 	}
 
 	@Override

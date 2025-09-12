@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,7 +107,7 @@ public class VendorInfoController {
 	}
 
 	@PutMapping("/{id}/verification-vendor-details")
-	public ResponseEntity<?> vendorDetailsVerification(@PathVariable Long id,
+	public ResponseEntity<?> vendorDetailsVerification(@PathVariable("id") Long id,
 			@RequestBody VendorVerificationDTO vendorVerificationDTO) {
 		try {
 			String result = vendorInfoService.verifyVendorDetails(id, vendorVerificationDTO);
@@ -118,5 +119,19 @@ public class VendorInfoController {
 					.body("An error occurred while verifying vendor: " + ex.getMessage());
 		}
 	}
+	
+	@GetMapping("/verification-status")
+	public ResponseEntity<?> getVendorVerificationStatusByEmail(@RequestParam("email") String email) {
+	    try {
+	        VendorDetailsVerification status = vendorInfoService.getVendorVerificationStatusByEmail(email);
+	        return ResponseEntity.ok(status);
+	    } catch (EntityNotFoundException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor with email " + email + " not found.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An error occurred: " + e.getMessage());
+	    }
+	}
+
 
 }

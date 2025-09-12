@@ -32,7 +32,6 @@ public class OurEmployees {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long OurEmployeeId;
 
-
 	@OneToOne
 	@JoinColumn(name = "employee_id", nullable = false)
 	@JsonBackReference
@@ -52,61 +51,39 @@ public class OurEmployees {
 
 	@Column(name = "designation")
 	private String designation;
-    
+
 	@Column(name = "process")
 	private String process;
-    
+
 	@Column(name = "Company_type")
 	private String CompanyType;
-	
+
 	@Column(name = "grid")
 	private String grid;
-	
+
 	@Column(name = "grade")
 	private String grade;
-	
+
 	@Column(name = "ctc")
 	private Double ctc;
-	
-	@Column(name =  "take_home")
+
+	@Column(name = "take_home")
 	private Double takeHome;
-	
+
 	@Column(name = "training_applicable")
 	private String trainingApplicable;
-	
+
 	@Column(name = "training_days")
 	private Long trainingDays;
-	
+
 	@Column(name = "loyaltyBonus")
 	private Double loyaltyBonus;
 
 	@Column(name = "pli")
 	private Double pli;
-	
+
 	@Version
-    @Column(name = "version")
-    private Long version; 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Column(name = "version")
+	private Long version;
+
 }

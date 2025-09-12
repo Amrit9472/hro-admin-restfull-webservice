@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "training_batch")
@@ -33,4 +34,11 @@ public class TrainingBatch {
     private int passingMarks;
 
     private boolean certificateRequired;
+
+    @ElementCollection
+    @CollectionTable(name = "training_batch_candidates", joinColumns = @JoinColumn(name = "training_batch_id"))
+    @Column(name = "employee_id")
+    private List<Long> candidateIds;
+    
+    private int trainingDays;
 }

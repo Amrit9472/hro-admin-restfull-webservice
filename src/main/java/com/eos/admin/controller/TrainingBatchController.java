@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/training-attendance")
+@RequestMapping("/api/training-batch")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 @Slf4j
@@ -56,7 +56,14 @@ public class TrainingBatchController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create training batch");
         }
     }
+    
+    @GetMapping("/batches")
+    public ResponseEntity<List<TrainingBatchDTO>> getAllTrainingBatchesWithTrainingDays() {
+        List<TrainingBatchDTO> batches = trainingBatchService.getAllBatchesWithTrainingDays();
+        return ResponseEntity.ok(batches);
+    }
 
+    
     // Get process code by process name
     @GetMapping("/process-code")
     public ResponseEntity<?> getProcessCode(@RequestParam("process") String process) {

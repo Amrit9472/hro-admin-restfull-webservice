@@ -28,4 +28,4 @@ public interface LoiInfoRepository extends JpaRepository< LoiInformationTableEnt
 
 
 
-}
+}	

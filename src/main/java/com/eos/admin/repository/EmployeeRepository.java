@@ -123,5 +123,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 			    nativeQuery = true
 			)
 	String getVendorNameByEmployeeEmail(@Param("candiEmail") String candiEmail);
+		
+
+//	@Query("SELECT e FROM Employee e WHERE e.trainingBatch.id = :batchId")
+//	List<Employee> findByTrainingBatchId(@Param("batchId") Long batchId);
+
+	@Query(value = "SELECT * FROM employees WHERE id IN (SELECT employee_id FROM training_batch_candidates WHERE training_batch_id = :batchId)", nativeQuery = true)
+	List<Employee> findAllByBatchId(@Param("batchId") Long batchId);
 
 }

@@ -1,19 +1,33 @@
 package com.eos.admin.entity;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.eos.admin.enums.AttendanceType;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "InductionAttendance")
+@Table(name = "induction_attendance")
 @Data
 public class InductionAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
+    private Date date;
+    
 
     private String process;
 
@@ -23,8 +37,13 @@ public class InductionAttendance {
 
     private String marker; // who marked
 
-    private String type; // training / induction
+    @Enumerated(EnumType.STRING)
+    private AttendanceType type;  // training / induction
 
     @Column(name = "submission_date")
-    private LocalDate submissionDate;
+    private LocalDateTime submissionDate;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "our_employee_id", nullable = false)
+    private OurEmployees ourEmployee;
 }

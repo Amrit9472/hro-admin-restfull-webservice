@@ -6,6 +6,7 @@ import com.eos.admin.dto.DirectorDTO;
 import com.eos.admin.dto.VendorInfoDTO;
 import com.eos.admin.dto.VendorVerificationDTO;
 import com.eos.admin.entity.VendorInfo;
+import com.eos.admin.enums.VendorDetailsVerification;
 import com.eos.admin.exception.EntityNotFoundException;
 import com.eos.admin.repository.VendorInfoRepository;
 import com.eos.admin.service.VendorInfoService;
@@ -205,7 +206,6 @@ public class VendorInfoServiceImpl implements VendorInfoService {
 		return "Vendor verification updated successfully.";
 	}
 
-
 	private String saveChequeImageAndSetPath(DetailedFormDTO detailedFormDTO, MultipartFile chequeImage)
 			throws IOException {
 		if (chequeImage != null && !chequeImage.isEmpty()) {
@@ -284,6 +284,13 @@ public class VendorInfoServiceImpl implements VendorInfoService {
 		log.info("Saved cheque image to {}", filepath.toString());
 
 		return filepath.toString();
+	}
+	
+	@Override
+	public VendorDetailsVerification getVendorVerificationStatusByEmail(String email) {
+	    VendorInfo vendor = vendorInfoRepository.findByEmail(email)
+	            .orElseThrow(() -> new EntityNotFoundException("Vendor not found with email: " + email));
+	    return vendor.getVendorDetailsVerification();
 	}
 
 }

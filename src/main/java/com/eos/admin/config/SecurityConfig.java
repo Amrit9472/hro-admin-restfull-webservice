@@ -28,7 +28,6 @@ import com.eos.admin.serviceImpl.VendorUserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
 
 	private OurUserDetailsServiceImpl ourUserDetailsServiceImpl;
 	private VendorUserDetailsServiceImpl vendorUserDetailsService;
@@ -63,10 +62,15 @@ public class SecurityConfig {
 				.requestMatchers("/api/loi/**").hasAnyAuthority(ROLE_USER,ROLE_ADMIN,ROLE_MANAGER)
 				.requestMatchers("/adminuser/**").hasAnyAuthority(ROLE_USER,ROLE_ADMIN,ROLE_MANAGER)
 				.requestMatchers("/api/candi/**").hasAnyAuthority(ROLE_VENDOR,ROLE_ADMIN)			
+				.requestMatchers("/api/candidates/**").hasAnyAuthority(ROLE_VENDOR,ROLE_ADMIN)
 				.requestMatchers("/api/vendorInfo/**").hasAnyAuthority(ROLE_VENDOR,ROLE_ADMIN)
-				.requestMatchers("/api/attendance/**").hasAnyAuthority(ROLE_ER)
+				.requestMatchers("/api/attendance/**").hasAnyAuthority(ROLE_ER,ROLE_TRAINER)
 				.requestMatchers("/api/training-attendance/**").hasAnyAuthority(ROLE_TRAINER)
+				.requestMatchers("/api/training-batch/**").hasAnyAuthority(ROLE_TRAINER, ROLE_ER)
+				.requestMatchers("/api/training/**").hasAnyAuthority(ROLE_TRAINER, ROLE_ER)
+				.requestMatchers("/api/training-scores/**").hasAnyAuthority(ROLE_TRAINER, ROLE_ER)
 				.requestMatchers("/api/process/**").hasAnyAuthority(ROLE_ADMIN)
+				.requestMatchers("/api/trainer-master/**").hasAnyAuthority(ROLE_TRAINER, ROLE_ADMIN, ROLE_USER)
 				.anyRequest().authenticated())
 		.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.authenticationProvider(authenticationProvider())

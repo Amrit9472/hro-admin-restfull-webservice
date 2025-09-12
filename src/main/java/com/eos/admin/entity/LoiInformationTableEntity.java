@@ -27,7 +27,7 @@ public class LoiInformationTableEntity {
 	  @Column(name = "grid")
       private String grid;
 	  
-	  @Column(name = " process")
+	  @Column(name = "process")
       private String process;
 	  
 	  @Column(name = "grade")
@@ -49,7 +49,7 @@ public class LoiInformationTableEntity {
       private String trainingApplicable;
 	  
 	  @Column(name = "trainingDays")
-      private String trainingDays;
+      private int trainingDays;
 	  
 	  @Column(name = "gridGeneration")
       private Date gridGeneration;

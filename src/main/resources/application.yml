@@ -1,7 +1,7 @@
 spring:
   web:
     resources:
-      static-locations: file:///C:/Users/Bot_25/Desktop/Documents/CheckImages/
+      static-locations: file:///C:/Users/Athang_y/Documents/CheckImages/
   application:
     name: ''
   datasource:
@@ -40,12 +40,11 @@ logging:
 
 project:
   image:
-    check-image: C:/Users/Bot_25/Desktop/Documents/CheckImages
+    check-image: C:/Users/Athang_y/Documents/CheckImages
   file:
-    upload-dir: C:/Users/Bot_25/Desktop/Documents/AadharFileUpload
+    upload-dir: C:/Users/Athang_y/Desktop/AadharFileUpload
   pdf:
-    save-path: C:/Users/Bot_25/Desktop/Documents/LOIPdf
-
+    save-path: C:/Users/Athang_y/Documents/LOIPdf
 cors:
   allowed:
     origins:

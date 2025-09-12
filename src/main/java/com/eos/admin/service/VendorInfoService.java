@@ -3,6 +3,7 @@ package com.eos.admin.service;
 import com.eos.admin.dto.DetailedFormDTO;
 import com.eos.admin.dto.VendorInfoDTO;
 import com.eos.admin.dto.VendorVerificationDTO;
+import com.eos.admin.enums.VendorDetailsVerification;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,4 +27,6 @@ public interface VendorInfoService {
 	VendorInfoDTO createVendorInfo(DetailedFormDTO detailedFormDTO, MultipartFile chequeImage) throws IOException;
 
 	String verifyVendorDetails(Long id, VendorVerificationDTO vendorVerificationDTO);
+	
+	VendorDetailsVerification getVendorVerificationStatusByEmail(String email);
 }

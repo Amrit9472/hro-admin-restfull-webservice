@@ -24,7 +24,7 @@ import com.eos.admin.service.QueryService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/candi")
+@RequestMapping("/api/candidates")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @Slf4j
 public class VendorQueryController {
@@ -96,7 +96,7 @@ public class VendorQueryController {
     }
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateVendorQueryStatus(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody VendorQueryDTO vendorQueryDTO ) {
         log.info("Received request to update status for VendorQuery id {}: {}", id, vendorQueryDTO);
 

@@ -25,4 +25,7 @@ public interface UsersRepository extends JpaRepository<OurUsers,Integer> {
 	List<OurUsers> findByProcess(String processName);
 
 	List<OurUsers> findByUniqueCode(String processName);
+	
+	@Query("SELECT u.name FROM OurUsers u WHERE u.email = :email")
+    Optional<String> findNameByEmail(@Param("email") String email);
 }
